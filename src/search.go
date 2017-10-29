@@ -239,7 +239,7 @@ func SearchMain() {
 		}
 		/**************************/
 		id := xid.New().String()
-		fileonly := util.TodayString(5) + "*" + id
+		fileonly := util.TodayString(5) + "-" + id
 		rootdir := filepath.Join(".", "搜索结果", util.ValidFileName(keyword))
 		util.MakeDir(rootdir)
 		tempdata := "排序,商品标题,店铺名,发货地址,评论数,是否天猫,小费,价格,销量,用户ID,店铺URL,商品ID,商品详情URL,商品评论URL图片地址\n"
