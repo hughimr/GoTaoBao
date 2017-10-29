@@ -28,7 +28,7 @@
 
 请先安装Golang环境，拉下代码： `go get github.com/hunterhug/GoTaobao`
 
-然后`./build.sh`，直接点击二进制，如`exe`即可， 你可以在[此页]()下载
+然后`./build.sh`，直接点击二进制，如`exe`即可， 你可以在[此页](http://github.com/hunterhug/GoTaoBao/releases)下载
 
 运行命令行（按提示操作）：
 
