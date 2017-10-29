@@ -62,7 +62,7 @@ func init() {
 	爬虫, _ = spider.New(nil)
 	爬虫.SetUa(spider.RandomUa())
 	爬虫.SetHeaderParm("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-	爬虫.SetHeaderParm("Accept-Encoding", "gzip, deflate, br")
+	//爬虫.SetHeaderParm("Accept-Encoding", "gzip, deflate, br")
 	爬虫.SetHeaderParm("Accept-Language", "en-US,en;q=0.5")
 }
 
@@ -210,7 +210,7 @@ func SearchMain() {
 				fmt.Printf("抓取第%d页 失败：%s\n", page, err.Error())
 			} else {
 				fmt.Printf("抓取第%d页\n", page)
-				/*	filename := filepath.Join(".", "原始数据", util.ValidFileName(keyword), "search"+util.IS(page)+".html")
+				/*filename := filepath.Join(".", "原始数据", util.ValidFileName(keyword), "search"+util.IS(page)+".html")
 					util.MakeDirByFile(filename)
 					e := util.SaveToFile(filename, data)
 					if e != nil {

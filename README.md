@@ -1,4 +1,11 @@
-# 淘宝天猫商品信息采集小工具
+# 项目： 淘宝天猫小工具
+
+[![GitHub forks](https://img.shields.io/github/forks/hunterhug/GoTaobao.svg?style=social&label=Forks)](https://github.com/hunterhug/GoTaobao/network)
+[![GitHub stars](https://img.shields.io/github/stars/hunterhug/GoTaobao.svg?style=social&label=Stars)](https://github.com/hunterhug/GoTaobao/stargazers)
+[![GitHub last commit](https://img.shields.io/github/last-commit/hunterhug/GoTaobao.svg)](https://github.com/hunterhug/GoTaobao)
+[![Go Report Card](https://goreportcard.com/badge/github.com/hunterhug/GoTaobao)](https://goreportcard.com/report/github.com/hunterhug/GoTaobao)
+[![GitHub issues](https://img.shields.io/github/issues/hunterhug/GoTaobao.svg)](https://github.com/hunterhug/GoTaobao/issues)
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/hunterhug/GoTaobao/master/LICENSE)
 
 # 介绍
 使用速度快的Golang语言，编译成单一exe二进制文件，方便快捷！依赖[Marmot(Tubo) - Golang Web Spider/Crawler/Scrapy Package](https://github.com/hunterhug/GoSpider),  持续开发中....
