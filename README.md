@@ -52,7 +52,7 @@ $ ./GoTaoBao_linux_amd64
 
 ![](doc/mywork.png)
 
-如果你觉得项目帮助到你,欢迎请我喝杯咖啡,或加QQ：459527502
+如果你觉得项目帮助到你,欢迎请我喝杯咖啡
 
 微信
 ![微信](https://raw.githubusercontent.com/hunterhug/hunterhug.github.io/master/static/jpg/wei.png)
