@@ -8,7 +8,7 @@ package main
 import (
 	"fmt"
 	//"github.com/hunterhug/GoSpider/spider"
-	"github.com/hunterhug/GoSpider/util"
+	"github.com/hunterhug/GoTool/util"
 	"github.com/hunterhug/GoTaoBao/src"
 )
 

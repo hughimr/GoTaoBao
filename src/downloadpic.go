@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/hunterhug/GoSpider/query"
-	"github.com/hunterhug/GoSpider/util"
+	"github.com/hunterhug/GoTool/util"
 	"path/filepath"
 	"regexp"
 	"strings"

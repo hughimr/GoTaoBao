@@ -5,8 +5,8 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/PuerkitoBio/goquery",
-			"Comment": "v1.1.0-11-g1a71cc7",
-			"Rev": "1a71cc719d0d5b9e4f14ae072bef08b576b0bab5"
+			"Comment": "v1.1.0-6-g8806ada",
+			"Rev": "8806ada2a4ab225c06e9106f9631be80932db7ce"
 		},
 		{
 			"ImportPath": "github.com/andybalholm/cascadia",
@@ -14,28 +14,25 @@
 		},
 		{
 			"ImportPath": "github.com/hunterhug/GoSpider/query",
-			"Comment": "v1.1",
-			"Rev": "a372f8d5024f51e0c85e5f4b8124eb0e95804bb1"
+			"Comment": "v2.0",
+			"Rev": "aa2a2fab5564d71dd08eb757ef0ba8a5fc00a504"
 		},
 		{
 			"ImportPath": "github.com/hunterhug/GoSpider/spider",
-			"Comment": "v1.1",
-			"Rev": "a372f8d5024f51e0c85e5f4b8124eb0e95804bb1"
+			"Comment": "v2.0",
+			"Rev": "aa2a2fab5564d71dd08eb757ef0ba8a5fc00a504"
 		},
 		{
-			"ImportPath": "github.com/hunterhug/GoSpider/util",
-			"Comment": "v1.1",
-			"Rev": "a372f8d5024f51e0c85e5f4b8124eb0e95804bb1"
+			"ImportPath": "github.com/hunterhug/GoTool/util",
+			"Rev": "b2c5d6aa7010e2d8a558d652d6d18b1fc49f284e"
 		},
 		{
-			"ImportPath": "github.com/hunterhug/GoSpider/util/open",
-			"Comment": "v1.1",
-			"Rev": "a372f8d5024f51e0c85e5f4b8124eb0e95804bb1"
+			"ImportPath": "github.com/hunterhug/GoTool/util/open",
+			"Rev": "b2c5d6aa7010e2d8a558d652d6d18b1fc49f284e"
 		},
 		{
-			"ImportPath": "github.com/hunterhug/GoSpider/util/xid",
-			"Comment": "v1.1",
-			"Rev": "a372f8d5024f51e0c85e5f4b8124eb0e95804bb1"
+			"ImportPath": "github.com/hunterhug/GoTool/util/xid",
+			"Rev": "b2c5d6aa7010e2d8a558d652d6d18b1fc49f284e"
 		},
 		{
 			"ImportPath": "github.com/op/go-logging",
@@ -44,11 +41,11 @@
 		},
 		{
 			"ImportPath": "golang.org/x/net/html",
-			"Rev": "0e2717dc3cc05907dc23096ef3a9086ea93f567f"
+			"Rev": "c73622c77280266305273cb545f54516ced95b93"
 		},
 		{
 			"ImportPath": "golang.org/x/net/html/atom",
-			"Rev": "0e2717dc3cc05907dc23096ef3a9086ea93f567f"
+			"Rev": "c73622c77280266305273cb545f54516ced95b93"
 		}
 	]
 }

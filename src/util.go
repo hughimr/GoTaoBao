@@ -6,7 +6,7 @@
 package src
 
 import (
-	"github.com/hunterhug/GoSpider/util"
+	"github.com/hunterhug/GoTool/util"
 	"strings"
 )
 
