@@ -1,0 +1,17 @@
+---
+pipeline:
+  build:
+    image: golang:1.8
+    commands:
+      - go build
+  publish:
+    image: plugins/docker
+    registry: hub.docker.com
+    repo: hub.docker.com/hunterhug/${DRONE_REPO_NAME}
+    secrets: [DOCKER_USERNAME, DOCKER_PASSWORD]
+    tag: latest
+    file: Dockerfile
+    insecure: true
+    when:
+      branch: master
+      event: push
