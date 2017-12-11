@@ -8,13 +8,14 @@ package src
 import (
 	"encoding/json"
 	"fmt"
+	"path/filepath"
+	"regexp"
+	"strings"
+
 	"github.com/hunterhug/GoSpider/spider"
 	"github.com/hunterhug/GoTool/util"
 	"github.com/hunterhug/GoTool/util/open"
 	"github.com/hunterhug/GoTool/util/xid"
-	"path/filepath"
-	"regexp"
-	"strings"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
@@ -211,13 +212,13 @@ func SearchMain() {
 			} else {
 				fmt.Printf("抓取第%d页\n", page)
 				/*filename := filepath.Join(".", "原始数据", util.ValidFileName(keyword), "search"+util.IS(page)+".html")
-					util.MakeDirByFile(filename)
-					e := util.SaveToFile(filename, data)
-					if e != nil {
-						fmt.Printf("保存数据在:%s 失败:%s\n", filename, e.Error())
-						continue
-					}
-					fmt.Printf("保存数据在:%s 成功\n", filename)*/
+				util.MakeDirByFile(filename)
+				e := util.SaveToFile(filename, data)
+				if e != nil {
+					fmt.Printf("保存数据在:%s 失败:%s\n", filename, e.Error())
+					continue
+				}
+				fmt.Printf("保存数据在:%s 成功\n", filename)*/
 				xx := ParseSearchPrepare(data)
 				if string(xx) == "" {
 					fmt.Println("这页数据为空...")

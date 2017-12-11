@@ -48,10 +48,6 @@ $ ./GoTaoBao_linux_amd64
 
 # Support
 
-我的工作桌面是这样的：
-
-![](doc/mywork.png)
-
 如果你觉得项目帮助到你,欢迎请我喝杯咖啡
 
 微信
