@@ -7,13 +7,13 @@ package main
 
 import (
 	"fmt"
-	//"github.com/hunterhug/GoSpider/spider"
-	"github.com/hunterhug/GoTool/util"
+	//"github.com/hunterhug/marmot/miner"
 	"github.com/hunterhug/GoTaoBao/src"
+	"github.com/hunterhug/parrot/util"
 )
 
 func main() {
-	//spider.SetLogLevel("debug")
+	//miner.SetLogLevel("debug")
 	fmt.Println(`
 	---------------------------------------------
 	|	亲爱的朋友，你好！

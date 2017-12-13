@@ -1,7 +1,5 @@
 /*
-   Created by jinhan on 17-8-25.
-   Tip:
-   Update:
+   This source you can use
 */
 package xid
 

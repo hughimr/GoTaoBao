@@ -7,12 +7,13 @@ package src
 
 import (
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
-	"github.com/hunterhug/GoSpider/query"
-	"github.com/hunterhug/GoTool/util"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/hunterhug/marmot/expert"
+	"github.com/hunterhug/parrot/util"
 )
 
 // 详情页主图
@@ -57,7 +58,7 @@ func downlod(urlmany string) {
 		fmt.Println(err.Error())
 		return
 	} else {
-		docm, err := query.QueryBytes(content)
+		docm, err := expert.QueryBytes(content)
 		if err != nil {
 			fmt.Println(err.Error())
 			return

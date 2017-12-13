@@ -12,10 +12,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/hunterhug/GoSpider/spider"
-	"github.com/hunterhug/GoTool/util"
-	"github.com/hunterhug/GoTool/util/open"
-	"github.com/hunterhug/GoTool/util/xid"
+	"github.com/hunterhug/marmot/miner"
+	"github.com/hunterhug/parrot/util"
+	"github.com/hunterhug/parrot/util/open"
+	"github.com/hunterhug/parrot/util/xid"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
@@ -35,7 +35,7 @@ type SearchQuery struct {
 }
 
 var (
-	爬虫   *spider.Spider
+	爬虫   *miner.Worker
 	搜索链接 = "https://s.taobao.com/search?q=%s&s=%d&sort=%s"
 	搜索排序 = map[int]string{
 		1: "综合排序(MayBe千人千面)",
@@ -60,8 +60,8 @@ var (
 )
 
 func init() {
-	爬虫, _ = spider.New(nil)
-	爬虫.SetUa(spider.RandomUa())
+	爬虫, _ = miner.New(nil)
+	爬虫.SetUa(miner.RandomUa())
 	爬虫.SetHeaderParm("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 	//爬虫.SetHeaderParm("Accept-Encoding", "gzip, deflate, br")
 	爬虫.SetHeaderParm("Accept-Language", "en-US,en;q=0.5")

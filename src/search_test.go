@@ -7,9 +7,10 @@ package src
 
 import (
 	"fmt"
-	"github.com/hunterhug/GoTool/util"
 	"path/filepath"
 	"testing"
+
+	"github.com/hunterhug/parrot/util"
 )
 
 func TestSearchPrepare(t *testing.T) {

@@ -8,7 +8,7 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/hunterhug/GoTaobao/master/LICENSE)
 
 # 介绍
-使用速度快的Golang语言，编译成单一exe二进制文件，方便快捷！依赖[Marmot(Tubo) - Golang Web Spider/Crawler/Scrapy Package](https://github.com/hunterhug/GoSpider),  持续开发中....
+使用速度快的Golang语言，编译成单一exe二进制文件，方便快捷！依赖[Marmot | Golang Web Spider/Crawler/Scrapy Package](https://github.com/hunterhug/marmot), 持续开发中....
 
 功能列表如下：
 
