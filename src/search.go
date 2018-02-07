@@ -38,10 +38,10 @@ type SearchQuery struct {
 }
 
 var (
-	爬虫   *miner.Worker
-	搜索链接 = "https://s.taobao.com/search?q=%s&s=%d&sort=%s"
-	有价格区间的搜索连接 ="https://s.taobao.com/search?q=%s&s=%d&sort=%s&filter=reserve_prive[%.2f,%.2f]"
-	搜索排序 = map[int]string{
+	爬虫         *miner.Worker
+	搜索链接       = "https://s.taobao.com/search?q=%s&s=%d&sort=%s"
+	有价格区间的搜索连接 = "https://s.taobao.com/search?q=%s&s=%d&sort=%s&filter=reserve_%s%.2f%s%.2f%s"
+	搜索排序       = map[int]string{
 		1: "综合排序(MayBe千人千面)",
 		2: "人气从高到低",
 		3: "销量从高到低",
@@ -100,17 +100,15 @@ func SearchPrepare(keyword string, page int, order int) string {
 }
 
 //搜索带价格区间带全部类型商品
-func SearchPrepareWithSection(keyword string,page int,order int,sectStart float64,sectEnd float64) string {
+func SearchPrepareWithSection(keyword string, page int, order int, sectStart float64, sectEnd float64) string {
 	orderstring, ok := OrderMap[order]
 	if !ok {
 		orderstring = "default"
 		fmt.Println("排序条件出错，采用默认")
 	}
-	url := fmt.Sprintf(有价格区间的搜索连接, util.UrlE(keyword), (page-1)*44, orderstring,sectStart,sectEnd)
+	url := fmt.Sprintf(有价格区间的搜索连接, util.UrlE(keyword), (page-1)*44, orderstring, util.UrlE("price["),sectStart,util.UrlE(","), sectEnd,util.UrlE("]"))
 	return url
 }
-
-
 
 // 只搜索天猫
 func SearchPrepareTmall(keyword string, page int, order int) string {
@@ -177,9 +175,9 @@ type ItemObject struct {
 	ViewPrice string `json:"view_price"` // 价格
 	ViewSales string `json:"view_sales"` // 付款人数
 
-	SectPercent int `json:"sect_percent"` //价格区间占比
-	SectStart float64 `json:"sect_start"` //区间起始值
-	SectEnd  float64 `json:"sect_end"` //区间结束值
+	SectPercent int     `json:"sect_percent"` //价格区间占比
+	SectStart   float64 `json:"sect_start"`   //区间起始值
+	SectEnd     float64 `json:"sect_end"`     //区间结束值
 }
 
 type IsTmall struct {

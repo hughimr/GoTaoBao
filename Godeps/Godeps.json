@@ -1,8 +1,11 @@
 {
-	"ImportPath": "github.com/hunterhug/GoTaoBao",
+	"ImportPath": "github.com/hughimr/GoTaoBao",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v79",
 	"Deps": [
+		{
+			"ImportPath":"github.com/hughimr/GoTaoBao/src"
+		},
 		{
 			"ImportPath": "github.com/PuerkitoBio/goquery",
 			"Comment": "v1.1.0-6-g8806ada",
