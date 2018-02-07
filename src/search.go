@@ -16,6 +16,9 @@ import (
 	"github.com/hunterhug/parrot/util"
 	"github.com/hunterhug/parrot/util/open"
 	"github.com/hunterhug/parrot/util/xid"
+	"os"
+	"strconv"
+	"time"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
@@ -37,6 +40,7 @@ type SearchQuery struct {
 var (
 	爬虫   *miner.Worker
 	搜索链接 = "https://s.taobao.com/search?q=%s&s=%d&sort=%s"
+	有价格区间的搜索连接 ="https://s.taobao.com/search?q=%s&s=%d&sort=%s&filter=reserve_prive[%.2f,%.2f]"
 	搜索排序 = map[int]string{
 		1: "综合排序(MayBe千人千面)",
 		2: "人气从高到低",
@@ -95,6 +99,19 @@ func SearchPrepare(keyword string, page int, order int) string {
 	return url
 }
 
+//搜索带价格区间带全部类型商品
+func SearchPrepareWithSection(keyword string,page int,order int,sectStart float64,sectEnd float64) string {
+	orderstring, ok := OrderMap[order]
+	if !ok {
+		orderstring = "default"
+		fmt.Println("排序条件出错，采用默认")
+	}
+	url := fmt.Sprintf(有价格区间的搜索连接, util.UrlE(keyword), (page-1)*44, orderstring,sectStart,sectEnd)
+	return url
+}
+
+
+
 // 只搜索天猫
 func SearchPrepareTmall(keyword string, page int, order int) string {
 	url := SearchPrepare(keyword, page, order)
@@ -111,8 +128,29 @@ type Mods struct {
 	//PageName string `json:"pageName"`
 }
 type Items struct {
-	Items ItemList `json:"itemlist"`
+	Items   ItemList `json:"itemlist"`
+	Sortbar BarList  `json:"sortbar"`
 }
+
+type BarList struct {
+	Data DataList `json:"data"`
+}
+
+type DataList struct {
+	Price PriceData `json:"price"`
+}
+
+type PriceData struct {
+	Rank []RankObject `json:"rank"`
+}
+
+//解析页面上最多价格区间喜欢的
+type RankObject struct {
+	Percent int    `json:"percent"`
+	Start   string `json:"start"`
+	End     string `json:"end"`
+}
+
 type ItemList struct {
 	Data ItemData `json:"data"`
 }
@@ -139,6 +177,9 @@ type ItemObject struct {
 	ViewPrice string `json:"view_price"` // 价格
 	ViewSales string `json:"view_sales"` // 付款人数
 
+	SectPercent int `json:"sect_percent"` //价格区间占比
+	SectStart float64 `json:"sect_start"` //区间起始值
+	SectEnd  float64 `json:"sect_end"` //区间结束值
 }
 
 type IsTmall struct {
@@ -270,4 +311,120 @@ func SearchMain() {
 
 func CD(a string) string {
 	return TripAll(strings.Replace(a, ",", "*", -1))
+}
+
+//copy from SearchMain()
+func MySearchMain(keyWord string) {
+
+	csv := []ItemObject{}
+
+	//	fmt.Println(`
+	//-------------------------------
+	//欢迎使用强大的搜索框小工具
+	//你只需安装提示进行即可！
+	//联系QQ：459527502
+	//----------------------------------
+	//`)
+	//	keyword := util.Input("请输入关键字(请使用+代替空格！):", "")
+	keyword := strings.Replace(keyWord, " ", "+", -1)
+	//types := 请问搜索如何排序() 直接按照销量降序排序
+	types := 3
+	//默认搜索的商品包含天猫和淘宝
+	//tmall := false
+	//if strings.Contains(strings.ToLower(util.Input("是否只搜索天猫商品(Y/y),默认N", "n")), "y") {
+	//	tmall = true
+	//}
+
+	//pagestemp := util.Input("你要抓几页(1-100):", "1")
+	//抓取100页
+	pages := 100
+	//pages, err := util.SI(pagestemp)
+	//if err != nil {
+	//	fmt.Println("输入页数有问题")
+	//	break
+	//}
+	//if pages > 100 || pages < 1 {
+	//	fmt.Printf("你选择的页数有问题：%d\n", pages)
+	//	break
+	//}
+	url := ""
+	//解析得到价格区间
+	url0 := SearchPrepare(keyword, 1, types)
+	data0, err0 := Search(url0)
+	if err0 != nil {
+		fmt.Printf("抓取第%d页 失败：%s\n", 1, err0.Error())
+	} else {
+		x0 := ParseSearchPrepare(data0)
+		if string(x0) == "" {
+			fmt.Println("抓取起始页数据为空")
+			os.Exit(1)
+		}
+		a0 := ParseSearch(x0)
+		rankList := a0.ModData.Sortbar.Data.Price.Rank
+		if len(rankList) > 0 {
+			for _, v0 := range rankList {
+				percent0 := v0.Percent
+				start0, _ := strconv.ParseFloat(v0.Start, 64)
+				end0, _ := strconv.ParseFloat(v0.End, 64)
+				for page := 1; page <= pages; page++ {
+					url = SearchPrepareWithSection(keyword, page, types, start0, end0)
+
+					fmt.Println("搜索:" + url)
+					data, err := Search(url)
+					if err != nil {
+						fmt.Printf("抓取区间[%Rd,%d]第%d页 失败：%s\n", start0, end0, page, err.Error())
+					} else {
+						fmt.Printf("抓取区间[%d,%d]第%d页\n", start0, end0, page)
+						/*filename := filepath.Join(".", "原始数据", util.ValidFileName(keyword), "search"+util.IS(page)+".html")
+						util.MakeDirByFile(filename)
+						e := util.SaveToFile(filename, data)
+						if e != nil {
+							fmt.Printf("保存数据在:%s 失败:%s\n", filename, e.Error())
+							continue
+						}
+						fmt.Printf("保存数据在:%s 成功\n", filename)*/
+						xx := ParseSearchPrepare(data)
+						if string(xx) == "" {
+							fmt.Println("这页数据为空...")
+							continue
+						}
+						a := ParseSearch(xx)
+						if len(a.ModData.Items.Data.Auctions) > 0 {
+							for _, v := range a.ModData.Items.Data.Auctions {
+								v.SectPercent = percent0
+								v.SectStart = start0
+								v.SectEnd = end0
+								csv = append(csv, v)
+								//fmt.Printf("%#v\n", v)
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if len(csv) == 0 {
+			fmt.Println("啥都没抓到")
+			os.Exit(1)
+		}
+		/**************************/
+		id := xid.New().String()
+		fileonly := util.TodayString(5) + "-" + id
+		nowDay := time.Now().Format("2006-01-02")
+		rootdir := filepath.Join(".", "搜索结果", time.Now().Format("2006/01/02"))
+		util.MakeDir(rootdir)
+		tempdata := "排序,日期，关键字，所在区间占比，区间起始值，区间结束值，商品标题,店铺名,发货地址,评论数,是否天猫,小费,价格,销量,用户ID,店铺URL,商品ID,商品详情URL,商品评论URL图片地址\n"
+
+		for k, v := range csv {
+			tempdata = tempdata + fmt.Sprintf("%v,%s,%s,%d,%.2f,%.2f,%s,%s,%s,", k+1, nowDay, keyword, v.SectPercent, v.SectStart, v.SectEnd, CD(v.RawTitle), v.Nick, v.ItemLoc)
+			tempdata = tempdata + fmt.Sprintf("%s,%v,%s,%s,%s,", v.CommentCount, v.IsTmallObject.Yes, v.ViewFee, v.ViewPrice, v.ViewSales)
+			s1 := "http://store.taobao.com/shop/view_shop.htm?user_number_id=" + v.UserId
+			s2 := "http://detail.tmall.com/item.htm?id=" + v.Nid
+			s3 := s2 + "&on_comment=1"
+			tempdata = tempdata + fmt.Sprintf("%s,%s,%s,%s,%s,%s\n", v.UserId, s1, v.Nid, s2, s3, "http:"+v.PicUrl)
+		}
+
+		filekeep := rootdir + "/" + fileonly + ".csv"
+		util.SaveToFile(filekeep, []byte(tempdata))
+	}
 }
