@@ -10,9 +10,9 @@ import (
 	//"net/url"
 	//"fmt"
 	"fmt"
-	"os"
-	"github.com/PuerkitoBio/goquery"
-	"strings"
+	//"os"
+	//"github.com/PuerkitoBio/goquery"
+	//"strings"
 )
 
 func main() {
@@ -23,7 +23,10 @@ func main() {
 	//src.MySearchMain("加湿器")
 
 
-	fmt.Println(src.GetKeywords())
+	for _,v  :=range src.GetKeywords(){
+
+		fmt.Println(v)
+	}
 
 
 
