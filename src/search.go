@@ -19,6 +19,10 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"go/types"
+	"github.com/PuerkitoBio/goquery"
+	"io"
+	"io/ioutil"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
@@ -182,6 +186,12 @@ type ItemObject struct {
 
 type IsTmall struct {
 	Yes bool `json:"isTmall"`
+}
+
+type KeyItem struct {
+	levelOne string
+	levelTwo string
+	levelThree string
 }
 
 func ParseSearchPrepare(data []byte) []byte {
@@ -425,4 +435,44 @@ func MySearchMain(keyWord string) {
 		filekeep := rootdir + "/" + fileonly + ".csv"
 		util.SaveToFile(filekeep, []byte(tempdata))
 	}
+}
+
+
+func GetKeywords() {
+
+	keys :=[]KeyItem{}
+	key :=KeyItem{}
+
+	urlKey:="https://www.taobao.com/markets/tbhome/market-list"
+
+	dataK,errK:=Search(urlKey)
+
+	//解析页面拿到关键字
+	if errK!=nil || string(dataK)==""{
+		fmt.Printf("获取关键字失败.error:%s",errK.Error())
+		os.Exit(1)
+	}
+
+	doc, _ :=goquery.NewDocumentFromReader(strings.NewReader(string(dataK)))
+
+	doc.Find("div.layout.layout-grid-0").Each(func(index int, sel *goquery.Selection) {
+		div1:=sel.Find("div.grid-0").Find("div.col.col-main").Find("div.main-wrap.J_Region").Find("div.home-category-list.J_Module").Find("div.module-wrap")
+		a1:=div1.Find("a.category-name.category-name-level1.J_category_hash").Text()
+		div1.Find("ul.category-list").Find("li").Each(func(index2 int, sel2 *goquery.Selection) {
+			a2:=sel2.ChildrenFiltered("a.category-name").Text()
+
+			sel2.Find("div.category-items").Find("a").Each(func(index3 int, sel3 *goquery.Selection) {
+				a3:=sel3.Text()
+
+				key.levelOne=a1
+				key.levelTwo=a2
+				key.levelThree=a3
+				keys=append(keys, key)
+
+			})
+		})
+	})
+
+	return keys
+
 }
