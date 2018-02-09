@@ -189,9 +189,9 @@ type IsTmall struct {
 }
 
 type KeyItem struct {
-	levelOne string
-	levelTwo string
-	levelThree string
+	levelOne string `json:"level_one"`
+	levelTwo string `json:"level_two"`
+	levelThree string `json:"level_three"`
 }
 
 func ParseSearchPrepare(data []byte) []byte {
