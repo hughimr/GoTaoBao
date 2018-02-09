@@ -20,8 +20,6 @@ import (
 	"strconv"
 	"time"
 	"github.com/PuerkitoBio/goquery"
-	"bytes"
-	"expvar"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
@@ -188,9 +186,9 @@ type IsTmall struct {
 }
 
 type KeyItem struct {
-	levelOne string `json:"level_one"`
-	levelTwo string `json:"level_two"`
-	levelThree string `json:"level_three"`
+	LevelOne string `json:"level_one"`
+	LevelTwo string `json:"level_two"`
+	LevelThree string `json:"level_three"`
 }
 
 func ParseSearchPrepare(data []byte) []byte {

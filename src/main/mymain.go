@@ -31,7 +31,7 @@ func main() {
 
 		var m src.KeyItem
 		err:=json.Unmarshal(v,&m)
-		if err==nil{fmt.Println(m.levelOne)}
+		if err==nil{fmt.Println(m.LevelOne)}
 	}
 
 
