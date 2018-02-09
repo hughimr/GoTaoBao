@@ -19,10 +19,7 @@ import (
 	"os"
 	"strconv"
 	"time"
-	"go/types"
 	"github.com/PuerkitoBio/goquery"
-	"io"
-	"io/ioutil"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
