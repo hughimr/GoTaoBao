@@ -107,7 +107,7 @@ func SearchPrepareWithSection(keyword string, page int, order int, sectStart flo
 		orderstring = "default"
 		fmt.Println("排序条件出错，采用默认")
 	}
-	url := fmt.Sprintf(有价格区间的搜索连接, util.UrlE(keyword), (page-1)*44, orderstring, util.UrlE("price["),sectStart,util.UrlE(","), sectEnd,util.UrlE("]"))
+	url := fmt.Sprintf(有价格区间的搜索连接, util.UrlE(keyword), (page-1)*44, orderstring, util.UrlE("price["), sectStart, util.UrlE(","), sectEnd, util.UrlE("]"))
 	return url
 }
 
@@ -186,9 +186,9 @@ type IsTmall struct {
 }
 
 type KeyItem struct {
-	LevelOne string `json:"level_one"`
-	LevelTwo string `json:"level_two"`
-	LevelThree string `json:"level_three"`
+	LevelOne   string `json:"level_one"`
+	LevelTwo   string `json:"level_two"`
+	LevelThree string `json:"level_three,omitempty"`
 }
 
 func ParseSearchPrepare(data []byte) []byte {
@@ -406,11 +406,48 @@ func MySearchMain(keyWord string) {
 					}
 				}
 			}
+		} else {
+			url := ""
+			for page := 1; page <= pages; page++ {
+
+				url = SearchPrepare(keyword, page, types)
+
+				fmt.Println("搜索:" + url)
+				data, err := Search(url)
+				if err != nil {
+					fmt.Printf("抓取第%d页 失败：%s\n", page, err.Error())
+				} else {
+					fmt.Printf("抓取第%d页\n", page)
+					/*filename := filepath.Join(".", "原始数据", util.ValidFileName(keyword), "search"+util.IS(page)+".html")
+					util.MakeDirByFile(filename)
+					e := util.SaveToFile(filename, data)
+					if e != nil {
+						fmt.Printf("保存数据在:%s 失败:%s\n", filename, e.Error())
+						continue
+					}
+					fmt.Printf("保存数据在:%s 成功\n", filename)*/
+					xx := ParseSearchPrepare(data)
+					if string(xx) == "" {
+						fmt.Println("这页数据为空...")
+						continue
+					}
+					a := ParseSearch(xx)
+					if len(a.ModData.Items.Data.Auctions) > 0 {
+						for _, v := range a.ModData.Items.Data.Auctions {
+							v.SectPercent = 0
+							v.SectStart = 0.0
+							v.SectEnd = 0.0
+							csv = append(csv, v)
+							//fmt.Printf("%#v\n", v)
+						}
+					}
+				}
+			}
 		}
 
 		if len(csv) == 0 {
 			fmt.Println("啥都没抓到")
-			os.Exit(1)
+			//os.Exit(1)
 		}
 		/**************************/
 		id := xid.New().String()
@@ -434,38 +471,37 @@ func MySearchMain(keyWord string) {
 	}
 }
 
+func GetKeywords() [][]byte {
 
-func GetKeywords() [][]byte{
+	keys := [][]byte{}
+	key := make(map[string]interface{})
 
-	keys :=[][]byte{}
-	key :=make(map[string]interface{})
+	urlKey := "https://www.taobao.com/markets/tbhome/market-list"
 
-	urlKey:="https://www.taobao.com/markets/tbhome/market-list"
-
-	dataK,errK:=Search(urlKey)
+	dataK, errK := Search(urlKey)
 
 	//解析页面拿到关键字
-	if errK!=nil || string(dataK)==""{
-		fmt.Printf("获取关键字失败.error:%s",errK.Error())
+	if errK != nil || string(dataK) == "" {
+		fmt.Printf("获取关键字失败.error:%s", errK.Error())
 		os.Exit(1)
 	}
 
-	doc, _ :=goquery.NewDocumentFromReader(strings.NewReader(string(dataK)))
+	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(string(dataK)))
 
 	doc.Find("div.layout.layout-grid-0").Each(func(index int, sel *goquery.Selection) {
-		div1:=sel.Find("div.grid-0").Find("div.col.col-main").Find("div.main-wrap.J_Region").Find("div.home-category-list.J_Module").Find("div.module-wrap")
-		a1:=div1.Find("a.category-name.category-name-level1.J_category_hash").Text()
+		div1 := sel.Find("div.grid-0").Find("div.col.col-main").Find("div.main-wrap.J_Region").Find("div.home-category-list.J_Module").Find("div.module-wrap")
+		a1 := div1.Find("a.category-name.category-name-level1.J_category_hash").Text()
 		div1.Find("ul.category-list").Find("li").Each(func(index2 int, sel2 *goquery.Selection) {
-			a2:=sel2.ChildrenFiltered("a.category-name").Text()
+			a2 := sel2.ChildrenFiltered("a.category-name").Text()
 
 			sel2.Find("div.category-items").Find("a").Each(func(index3 int, sel3 *goquery.Selection) {
-				a3:=sel3.Text()
+				a3 := sel3.Text()
 
-				key["level_one"]=a1
-				key["level_two"]=a2
-				key["level_three"]=a3
-				keyB,_:=json.Marshal(key)
-				keys=append(keys, keyB)
+				key["level_one"] = a1
+				key["level_two"] = a2
+				key["level_three"] = a3
+				keyB, _ := json.Marshal(key)
+				keys = append(keys, keyB)
 
 			})
 		})

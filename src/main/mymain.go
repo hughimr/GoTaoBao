@@ -6,7 +6,6 @@
 package main
 
 import (
-
 	"github.com/hughimr/GoTaoBao/src"
 	//"net/url"
 	//"fmt"
@@ -15,9 +14,9 @@ import (
 	//"github.com/PuerkitoBio/goquery"
 	//"strings"
 	"encoding/json"
+	"regexp"
+	"github.com/hunterhug/parrot/util"
 )
-
-
 
 func main() {
 	//miner.SetLogLevel("debug")
@@ -26,15 +25,34 @@ func main() {
 	*/
 	//src.MySearchMain("加湿器")
 
-
-	for _,v  :=range src.GetKeywords(){
+	//自定义关键字
+	keyWordList := []string{"苹果手机壳"}
+	//拿淘宝分类关键字
+	for _, v := range src.GetKeywords() {
 
 		var m src.KeyItem
-		err:=json.Unmarshal(v,&m)
-		if err==nil{fmt.Println(m.LevelOne)}
+		err := json.Unmarshal(v, &m)
+		if err == nil {
+			//fmt.Println(m.LevelThree)
+			pattern, _ := regexp.Compile(`.*家电|路由|电器|存储|耳机|3C|智能|壳|灯具.*`)
+			if pattern.Match([]byte(m.LevelOne)) || pattern.Match([]byte(m.LevelTwo)) || pattern.Match([]byte(m.LevelThree)) {
+				//去掉不相干的关键字
+				pattern2, _ := regexp.Compile(".*服务|元器件|商用家具|五金工具|个性定制|文化|iPhone6|包装|A4纸.*")
+				if !pattern2.Match([]byte(m.LevelOne)) && !pattern2.Match([]byte(m.LevelTwo)) && !pattern2.Match([]byte(m.LevelThree)) && len(m.LevelThree) != 0 {
+
+					//fmt.Println(m.LevelOne,m.LevelTwo,m.LevelThree)
+					keyWordList = append(keyWordList, string(m.LevelThree))
+
+				}
+
+			}
+		}
 	}
 
-
-
-
+	for _, v := range keyWordList {
+		fmt.Printf("开始抓关键字%s\n",v)
+		src.MySearchMain(v)
+		util.Sleep(5)
 	}
+
+}
