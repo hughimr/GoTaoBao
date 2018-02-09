@@ -20,6 +20,7 @@ import (
 	"strconv"
 	"time"
 	"github.com/PuerkitoBio/goquery"
+	"bytes"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
@@ -186,9 +187,9 @@ type IsTmall struct {
 }
 
 type KeyItem struct {
-	levelOne string `json:"level_one"`
-	levelTwo string `json:"level_two"`
-	levelThree string `json:"level_three"`
+	levelOne string
+	levelTwo string
+	levelThree string
 }
 
 func ParseSearchPrepare(data []byte) []byte {
@@ -435,10 +436,10 @@ func MySearchMain(keyWord string) {
 }
 
 
-func GetKeywords() []KeyItem{
+func GetKeywords() [][]byte{
 
-	keys :=[]KeyItem{}
-	key :=KeyItem{}
+	keys :=[][]byte{}
+	//key :=KeyItem{}
 
 	urlKey:="https://www.taobao.com/markets/tbhome/market-list"
 
@@ -461,10 +462,9 @@ func GetKeywords() []KeyItem{
 			sel2.Find("div.category-items").Find("a").Each(func(index3 int, sel3 *goquery.Selection) {
 				a3:=sel3.Text()
 
-				key.levelOne=a1
-				key.levelTwo=a2
-				key.levelThree=a3
-				keys=append(keys, key)
+				key:=KeyItem{a1,a2,a3}
+				keyB,_:=json.Marshal(key)
+				keys=append(keys, keyB)
 
 			})
 		})
