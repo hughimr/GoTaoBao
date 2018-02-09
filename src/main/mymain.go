@@ -6,6 +6,7 @@
 package main
 
 import (
+
 	"github.com/hughimr/GoTaoBao/src"
 	//"net/url"
 	//"fmt"
@@ -13,7 +14,10 @@ import (
 	//"os"
 	//"github.com/PuerkitoBio/goquery"
 	//"strings"
+	"encoding/json"
 )
+
+
 
 func main() {
 	//miner.SetLogLevel("debug")
@@ -25,7 +29,9 @@ func main() {
 
 	for _,v  :=range src.GetKeywords(){
 
-		fmt.Println(v)
+		var m src.KeyItem
+		err:=json.Unmarshal(v,&m)
+		if err==nil{fmt.Println(m.levelOne)}
 	}
 
 
