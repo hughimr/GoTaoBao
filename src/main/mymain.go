@@ -23,7 +23,7 @@ func main() {
 	//src.MySearchMain("加湿器")
 
 
-	src.GetKeywords()
+	fmt.Println(src.GetKeywords())
 
 
 

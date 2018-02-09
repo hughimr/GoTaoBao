@@ -438,7 +438,7 @@ func MySearchMain(keyWord string) {
 }
 
 
-func GetKeywords() {
+func GetKeywords() []KeyItem{
 
 	keys :=[]KeyItem{}
 	key :=KeyItem{}
