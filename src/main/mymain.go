@@ -14,11 +14,48 @@ import (
 	//"github.com/PuerkitoBio/goquery"
 	//"strings"
 	"encoding/json"
-	"regexp"
+	//"regexp"
 	"github.com/hunterhug/parrot/util"
+	//"flag"
+	//"runtime/pprof"
+	//"os"
+
+	//"log"
+	//"runtime"
+	//"encoding/json"
+	"regexp"
 )
+//
+//var cpuprofile = flag.String("cpuprofile","", "write cpu profile `file`")
+//var memprofile = flag.String("memprofile","", "write memory profile to `file`")
+//
+//var memFile *os.File
+//var cpuFile *os.File
 
 func main() {
+	//
+	//flag.Parse()
+	//if *cpuprofile != "" {
+	//	cpuFile,err := os.Create(*cpuprofile)
+	//	if err != nil {
+	//		log.Fatal("could not create CPU profile: ", err)
+	//	}
+	//	if err := pprof.StartCPUProfile(cpuFile); err != nil {
+	//		log.Fatal("could not start CPU profile: ", err)
+	//	}
+	//	defer pprof.StopCPUProfile()
+	//}
+	//
+	//
+	//
+	//	memFile,err := os.Create(*memprofile)
+	//	if err != nil {
+	//		log.Fatal("could not create memory profile: ", err)
+	//	}
+
+
+
+	//runtime.GC() // get up-to-date statistics
 	//miner.SetLogLevel("debug")
 	/*
 		执行爬取天猫淘宝商品信息
@@ -52,7 +89,21 @@ func main() {
 	for _, v := range keyWordList {
 		fmt.Printf("开始抓关键字%s\n",v)
 		src.MySearchMain(v)
+
+
+		//if err := pprof.WriteHeapProfile(memFile); err != nil {
+		//	log.Fatal("could not write memory profile: ", err)
+		//}
+
+
 		util.Sleep(5)
 	}
+
+
+	//defer memFile.Close()
+	//pprof.StopCPUProfile()
+	//cpuFile.Close()
+	//memFile.Close()
+
 
 }

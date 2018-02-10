@@ -412,7 +412,7 @@ func MySearchMain(keyWord string) {
 
 				url = SearchPrepare(keyword, page, types)
 
-				fmt.Println("搜索:" + url)
+				//fmt.Println("搜索:" + url)
 				data, err := Search(url)
 				if err != nil {
 					fmt.Printf("抓取第%d页 失败：%s\n", page, err.Error())
