@@ -374,7 +374,7 @@ func MySearchMain(keyWord string) {
 				for page := 1; page <= pages; page++ {
 					url = SearchPrepareWithSection(keyword, page, types, start0, end0)
 
-					fmt.Println("搜索:" + url)
+					//fmt.Println("搜索:" + url)
 					data, err := Search(url)
 					if err != nil {
 						fmt.Printf("抓取区间[%.2f,%.2f]第%d页 失败：%s\n", start0, end0, page, err.Error())
@@ -417,7 +417,7 @@ func MySearchMain(keyWord string) {
 				if err != nil {
 					fmt.Printf("抓取第%d页 失败：%s\n", page, err.Error())
 				} else {
-					fmt.Printf("抓取第%d页\n", page)
+					//fmt.Printf("抓取第%d页\n", page)
 					/*filename := filepath.Join(".", "原始数据", util.ValidFileName(keyword), "search"+util.IS(page)+".html")
 					util.MakeDirByFile(filename)
 					e := util.SaveToFile(filename, data)
