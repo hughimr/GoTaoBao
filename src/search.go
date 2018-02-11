@@ -130,7 +130,7 @@ type Mods struct {
 }
 
 type MainInfo struct {
-	MainInfoData TraceInfo `json:"maininfo"`
+	MainInfoData TraceInfo `json:"mainInfo"`
 }
 
 type TraceInfo struct {
@@ -138,7 +138,11 @@ type TraceInfo struct {
 }
 
 type TraceData struct {
-	RsKeyWords []string `json:"rsKeywords"`
+	TraceDataObject KeyWordObject  `json:"traceData"`
+}
+
+type KeyWordObject struct {
+	RsKeywords []string `json:"rskeywords"`
 }
 
 type Items struct {
@@ -400,7 +404,7 @@ func MySearchMain(keyWord string) {
 		a0 := ParseSearch(x0)
 		b0:=ParseSearchKeys(x0)
 		rankList := a0.ModData.Sortbar.Data.Price.Rank
-		keyWordList:=b0.MainInfoData.TraceData.RsKeyWords
+		keyWordList:=b0.MainInfoData.TraceData.TraceDataObject.RsKeywords
 		if len(rankList) > 0 {
 			for _, v0 := range rankList {
 				percent0 := v0.Percent
@@ -506,7 +510,7 @@ func MySearchMain(keyWord string) {
 		buffer.WriteString("排序,日期,关键字,关联关键字,所在区间占比,区间起始值,区间结束值,商品标题,店铺名,发货地址,评论数,是否天猫,小费,价格,销量,用户ID,店铺URL,商品ID,商品详情URL,商品评论URL图片地址\n")
 
 		for k, v := range csv {
-			buffer.WriteString(fmt.Sprintf("%v,%s,%s,%s,%d,%.2f,%.2f,%s,%s,%s,", k+1, nowDay, keyword, strings.Join(keyWordList,","),v.SectPercent, v.SectStart, v.SectEnd, CD(v.RawTitle), v.Nick, v.ItemLoc))
+			buffer.WriteString(fmt.Sprintf("%v,%s,%s,%s,%d,%.2f,%.2f,%s,%s,%s,", k+1, nowDay, keyword, strings.Join(keyWordList,";"),v.SectPercent, v.SectStart, v.SectEnd, CD(v.RawTitle), v.Nick, v.ItemLoc))
 			buffer.WriteString(fmt.Sprintf("%s,%v,%s,%s,%s,", v.CommentCount, v.IsTmallObject.Yes, v.ViewFee, v.ViewPrice, v.ViewSales))
 			s1 := "http://store.taobao.com/shop/view_shop.htm?user_number_id=" + v.UserId
 			s2 := "http://detail.tmall.com/item.htm?id=" + v.Nid
