@@ -20,6 +20,7 @@ import (
 	"strconv"
 	"time"
 	"github.com/PuerkitoBio/goquery"
+	"io"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
@@ -40,8 +41,8 @@ type SearchQuery struct {
 
 var (
 	爬虫         *miner.Worker
-	搜索链接       = "https://s.taobao.com/search?q=%s&s=%d&sort=%s"
-	有价格区间的搜索连接 = "https://s.taobao.com/search?q=%s&s=%d&sort=%s&filter=reserve_%s%.2f%s%.2f%s"
+	搜索链接       = "https://s.taobao.com/search?q=%s&s=%d&sort=%s&cd=false"
+	有价格区间的搜索连接 = "https://s.taobao.com/search?q=%s&s=%d&sort=%s&filter=reserve_%s%.2f%s%.2f%s&cd=false"
 	搜索排序       = map[int]string{
 		1: "综合排序(MayBe千人千面)",
 		2: "人气从高到低",
@@ -467,8 +468,24 @@ func MySearchMain(keyWord string) {
 		}
 
 		filekeep := rootdir + "/" + fileonly + ".csv"
-		util.SaveToFile(filekeep, []byte(tempdata))
+		//util.SaveToFile(filekeep, []byte(tempdata))
+		WriteStringToFile(filekeep,string(tempdata))
 	}
+}
+
+func WriteStringToFile(filepath, s string) error {
+	fo, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer fo.Close()
+
+	_, err = io.Copy(fo, strings.NewReader(s))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetKeywords() [][]byte {

@@ -20,9 +20,7 @@ import (
 	//"runtime/pprof"
 	//"os"
 
-	//"log"
-	//"runtime"
-	//"encoding/json"
+
 	"regexp"
 )
 //
@@ -86,6 +84,7 @@ func main() {
 		}
 	}
 
+	keyWordList=[]string{"电饭锅"}
 	for _, v := range keyWordList {
 		fmt.Printf("开始抓关键字%s\n",v)
 		src.MySearchMain(v)
