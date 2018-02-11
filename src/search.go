@@ -142,6 +142,13 @@ type DataList struct {
 
 type PriceData struct {
 	Rank []RankObject `json:"rank"`
+	Pager PriceObject `json:"pager"`
+}
+
+//解析总页面
+type PriceObject struct {
+	PageSize int `json:"pageSize"`
+	TotalPage int `json:"totalPage"`
 }
 
 //解析页面上最多价格区间喜欢的
@@ -372,6 +379,32 @@ func MySearchMain(keyWord string) {
 				percent0 := v0.Percent
 				start0, _ := strconv.ParseFloat(v0.Start, 64)
 				end0, _ := strconv.ParseFloat(v0.End, 64)
+
+				//解析分类第一个页面拿到总页面数
+				urlP:=SearchPrepareWithSection(keyword, 1, types, start0, end0)
+				dataP,errP:=Search(urlP)
+				if errP!=nil{
+					fmt.Println("获取总页面数失败")
+				}else{
+					xp:=ParseSearchPrepare(dataP)
+					if string(xp)==""{
+						fmt.Println("这页数据为空。")
+						continue
+					}else{
+						ap:=ParseSearch(xp)
+						pages=ap.ModData.Sortbar.Data.Price.Pager.TotalPage
+						if string(pages)==""{
+							fmt.Println("总页面数没解析到")
+							continue
+						}else{
+							fmt.Printf("总页面数是%d",pages)
+						}
+					}
+				}
+
+
+
+
 				for page := 1; page <= pages; page++ {
 					url = SearchPrepareWithSection(keyword, page, types, start0, end0)
 
@@ -381,14 +414,7 @@ func MySearchMain(keyWord string) {
 						fmt.Printf("抓取区间[%.2f,%.2f]第%d页 失败：%s\n", start0, end0, page, err.Error())
 					} else {
 						fmt.Printf("抓取区间[%.2f,%.2f]第%d页\n", start0, end0, page)
-						/*filename := filepath.Join(".", "原始数据", util.ValidFileName(keyword), "search"+util.IS(page)+".html")
-						util.MakeDirByFile(filename)
-						e := util.SaveToFile(filename, data)
-						if e != nil {
-							fmt.Printf("保存数据在:%s 失败:%s\n", filename, e.Error())
-							continue
-						}
-						fmt.Printf("保存数据在:%s 成功\n", filename)*/
+
 						xx := ParseSearchPrepare(data)
 						if string(xx) == "" {
 							fmt.Println("这页数据为空...")
@@ -418,15 +444,7 @@ func MySearchMain(keyWord string) {
 				if err != nil {
 					fmt.Printf("抓取第%d页 失败：%s\n", page, err.Error())
 				} else {
-					//fmt.Printf("抓取第%d页\n", page)
-					/*filename := filepath.Join(".", "原始数据", util.ValidFileName(keyword), "search"+util.IS(page)+".html")
-					util.MakeDirByFile(filename)
-					e := util.SaveToFile(filename, data)
-					if e != nil {
-						fmt.Printf("保存数据在:%s 失败:%s\n", filename, e.Error())
-						continue
-					}
-					fmt.Printf("保存数据在:%s 成功\n", filename)*/
+
 					xx := ParseSearchPrepare(data)
 					if string(xx) == "" {
 						fmt.Println("这页数据为空...")

@@ -22,6 +22,7 @@ import (
 
 
 	"regexp"
+	"time"
 )
 //
 //var cpuprofile = flag.String("cpuprofile","", "write cpu profile `file`")
@@ -85,6 +86,7 @@ func main() {
 	}
 
 	keyWordList=[]string{"电饭锅"}
+	t1:=time.Now()
 	for _, v := range keyWordList {
 		fmt.Printf("开始抓关键字%s\n",v)
 		src.MySearchMain(v)
@@ -98,6 +100,9 @@ func main() {
 		util.Sleep(5)
 	}
 
+	elapsed:=time.Since(t1)
+
+	fmt.Println("程序运行时间:",elapsed)
 
 	//defer memFile.Close()
 	//pprof.StopCPUProfile()
