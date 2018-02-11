@@ -138,11 +138,12 @@ type BarList struct {
 
 type DataList struct {
 	Price PriceData `json:"price"`
+	Pager PriceObject `json:"pager"`
 }
 
 type PriceData struct {
 	Rank []RankObject `json:"rank"`
-	Pager PriceObject `json:"pager"`
+
 }
 
 //解析总页面
@@ -392,7 +393,7 @@ func MySearchMain(keyWord string) {
 						continue
 					}else{
 						ap:=ParseSearch(xp)
-						pages=ap.ModData.Sortbar.Data.Price.Pager.TotalPage
+						pages=ap.ModData.Sortbar.Data.Pager.TotalPage
 						if string(pages)==""{
 							fmt.Println("总页面数没解析到")
 							continue
