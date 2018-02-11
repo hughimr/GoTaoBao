@@ -21,6 +21,7 @@ import (
 	"time"
 	"github.com/PuerkitoBio/goquery"
 	"io"
+	"bytes"
 )
 
 // 每页11列 44个商品 // 不用 ajax方式
@@ -127,6 +128,19 @@ type Mods struct {
 	ModData Items `json:"mods"`
 	//PageName string `json:"pageName"`
 }
+
+type MainInfo struct {
+	MainInfoData TraceInfo `json:"maininfo"`
+}
+
+type TraceInfo struct {
+	TraceData TraceData `json:"traceInfo"`
+}
+
+type TraceData struct {
+	RsKeyWords []string `json:"rsKeywords"`
+}
+
 type Items struct {
 	Items   ItemList `json:"itemlist"`
 	Sortbar BarList  `json:"sortbar"`
@@ -219,6 +233,16 @@ func ParseSearch(data []byte) Mods {
 	items := Mods{}
 	err := json.Unmarshal(data, &items)
 	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return items
+}
+
+//解析关联结构体
+func ParseSearchKeys(data []byte) MainInfo {
+	items :=MainInfo{}
+	err :=json.Unmarshal(data,&items)
+	if err!=nil{
 		fmt.Println(err.Error())
 	}
 	return items
@@ -374,7 +398,9 @@ func MySearchMain(keyWord string) {
 			os.Exit(1)
 		}
 		a0 := ParseSearch(x0)
+		b0:=ParseSearchKeys(x0)
 		rankList := a0.ModData.Sortbar.Data.Price.Rank
+		keyWordList:=b0.MainInfoData.TraceData.RsKeyWords
 		if len(rankList) > 0 {
 			for _, v0 := range rankList {
 				percent0 := v0.Percent
@@ -475,20 +501,25 @@ func MySearchMain(keyWord string) {
 		nowDay := time.Now().Format("2006-01-02")
 		rootdir := filepath.Join(".", "搜索结果", time.Now().Format("2006/01/02"))
 		util.MakeDir(rootdir)
-		tempdata := "排序,日期，关键字，所在区间占比，区间起始值，区间结束值，商品标题,店铺名,发货地址,评论数,是否天猫,小费,价格,销量,用户ID,店铺URL,商品ID,商品详情URL,商品评论URL图片地址\n"
+		var buffer bytes.Buffer
+		buffer.Reset()
+		buffer.WriteString("排序,日期,关键字,关联关键字,所在区间占比,区间起始值,区间结束值,商品标题,店铺名,发货地址,评论数,是否天猫,小费,价格,销量,用户ID,店铺URL,商品ID,商品详情URL,商品评论URL图片地址\n")
 
 		for k, v := range csv {
-			tempdata = tempdata + fmt.Sprintf("%v,%s,%s,%d,%.2f,%.2f,%s,%s,%s,", k+1, nowDay, keyword, v.SectPercent, v.SectStart, v.SectEnd, CD(v.RawTitle), v.Nick, v.ItemLoc)
-			tempdata = tempdata + fmt.Sprintf("%s,%v,%s,%s,%s,", v.CommentCount, v.IsTmallObject.Yes, v.ViewFee, v.ViewPrice, v.ViewSales)
+			buffer.WriteString(fmt.Sprintf("%v,%s,%s,%s,%d,%.2f,%.2f,%s,%s,%s,", k+1, nowDay, keyword, strings.Join(keyWordList,","),v.SectPercent, v.SectStart, v.SectEnd, CD(v.RawTitle), v.Nick, v.ItemLoc))
+			buffer.WriteString(fmt.Sprintf("%s,%v,%s,%s,%s,", v.CommentCount, v.IsTmallObject.Yes, v.ViewFee, v.ViewPrice, v.ViewSales))
 			s1 := "http://store.taobao.com/shop/view_shop.htm?user_number_id=" + v.UserId
 			s2 := "http://detail.tmall.com/item.htm?id=" + v.Nid
 			s3 := s2 + "&on_comment=1"
-			tempdata = tempdata + fmt.Sprintf("%s,%s,%s,%s,%s,%s\n", v.UserId, s1, v.Nid, s2, s3, "http:"+v.PicUrl)
+			buffer.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s,%s\n", v.UserId, s1, v.Nid, s2, s3, "http:"+v.PicUrl))
 		}
 
 		filekeep := rootdir + "/" + fileonly + ".csv"
 		//util.SaveToFile(filekeep, []byte(tempdata))
-		WriteStringToFile(filekeep,string(tempdata))
+		filename,_:=os.Create(filekeep)
+		buffer.WriteTo(filename)
+		filename.Close()
+		//WriteStringToFile(filekeep,buffer.String())
 	}
 }
 
@@ -497,12 +528,14 @@ func WriteStringToFile(filepath, s string) error {
 	if err != nil {
 		return err
 	}
-	defer fo.Close()
+	//defer fo.Close()
 
 	_, err = io.Copy(fo, strings.NewReader(s))
+	fo.Close()
 	if err != nil {
 		return err
 	}
+
 
 	return nil
 }
