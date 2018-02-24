@@ -482,7 +482,7 @@ func MySearchMain(keyWord string) {
 				url = SearchPrepare(keyword, page, types)
 
 				//fmt.Println("搜索:" + url)
-				AGAIN:data, err := Search(url)
+				AGAIN2:data, err := Search(url)
 				trytimes++
 				if err != nil {
 					fmt.Printf("抓取第%d页 失败：%s\n", page, err.Error())
@@ -494,7 +494,7 @@ func MySearchMain(keyWord string) {
 						if trytimes<3{
 							time.Sleep(5*time.Second)
 							fmt.Println("重试第",trytimes,"次")
-							goto AGAIN
+							goto AGAIN2
 						}else{
 							continue
 						}
