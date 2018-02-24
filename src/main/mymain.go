@@ -106,8 +106,10 @@ func main() {
 
 	sort.Strings(keyWordListRaw)
 
+
 	keyWordList:=RemoveDuplicatesAndEmpty(keyWordListRaw)
 
+	//fmt.Println(len(keyWordListRaw),len(keyWordList))
 
 	t1:=time.Now()
 	for _, v := range keyWordList {

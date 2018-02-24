@@ -437,10 +437,12 @@ func MySearchMain(keyWord string) {
 
 
 				for page := 1; page <= pages; page++ {
+					trytimes:=0
 					url = SearchPrepareWithSection(keyword, page, types, start0, end0)
 
 					//fmt.Println("搜索:" + url)
-					data, err := Search(url)
+					AGAIN :data, err := Search(url)
+					trytimes++
 					if err != nil {
 						fmt.Printf("抓取区间[%.2f,%.2f]第%d页 失败：%s\n", start0, end0, page, err.Error())
 					} else {
@@ -449,8 +451,15 @@ func MySearchMain(keyWord string) {
 						xx := ParseSearchPrepare(data)
 						if string(xx) == "" {
 							fmt.Println("这页数据为空...")
-							continue
+							if trytimes<3{
+								time.Sleep(5*time.Second)
+								fmt.Println("重试第",trytimes,"次")
+								goto AGAIN
+							}else{
+								continue
+							}
 						}
+						trytimes=0
 						a := ParseSearch(xx)
 						if len(a.ModData.Items.Data.Auctions) > 0 {
 							for _, v := range a.ModData.Items.Data.Auctions {
@@ -466,12 +475,15 @@ func MySearchMain(keyWord string) {
 			}
 		} else {
 			url := ""
+
 			for page := 1; page <= pages; page++ {
 
+				trytimes:=0
 				url = SearchPrepare(keyword, page, types)
 
 				//fmt.Println("搜索:" + url)
-				data, err := Search(url)
+				AGAIN:data, err := Search(url)
+				trytimes++
 				if err != nil {
 					fmt.Printf("抓取第%d页 失败：%s\n", page, err.Error())
 				} else {
@@ -479,8 +491,15 @@ func MySearchMain(keyWord string) {
 					xx := ParseSearchPrepare(data)
 					if string(xx) == "" {
 						fmt.Println("这页数据为空...")
-						continue
+						if trytimes<3{
+							time.Sleep(5*time.Second)
+							fmt.Println("重试第",trytimes,"次")
+							goto AGAIN
+						}else{
+							continue
+						}
 					}
+					trytimes=0
 					a := ParseSearch(xx)
 					if len(a.ModData.Items.Data.Auctions) > 0 {
 						for _, v := range a.ModData.Items.Data.Auctions {
