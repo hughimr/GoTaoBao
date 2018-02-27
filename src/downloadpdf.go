@@ -49,11 +49,11 @@ func downlodpdf(url string) {
 	dir:=filepath.Join(".","pdf","中怡康智库")
 	util.MakeDir(dir)
 	爬虫.SetUrl(url)
-	//urlhost := strings.Split(url, "//")
-	//if len(urlhost) != 2 {
-	//	fmt.Println("网站错误：开头必须为http://或https://")
-	//	return
-	//}
+	urlhost := strings.Split(url, "//")
+	if len(urlhost) != 2 {
+		fmt.Println("网站错误：开头必须为http://或https://")
+		return
+	}
 	content, err := 爬虫.Get()
 	if err != nil {
 		fmt.Println(err.Error())
