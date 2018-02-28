@@ -14,26 +14,28 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/hunterhug/marmot/expert"
 	"github.com/hunterhug/parrot/util"
+	"github.com/hunterhug/marmot/miner"
+	"strconv"
 )
+
+
+
+func init() {
+	爬虫, _ = miner.New(nil)
+	爬虫.SetUa(miner.RandomUa())
+	爬虫.SetHeaderParm("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+	//爬虫.SetHeaderParm("Accept-Encoding", "gzip, deflate, br")
+	爬虫.SetHeaderParm("Accept-Language", "en-US,en;q=0.5")
+}
 
 // 详情页主图
 func DownloadPdfMain() {
-	for {
-		fmt.Println(`
-	-------------------------------
-	欢迎使用强大的图片下载小工具
-	你只需按照提示进行即可！
-	联系QQ：459527502
-	----------------------------------
-	`)
-		fmt.Println("请输入天猫淘宝链接*保存目录")
-		fmt.Println("如：https://item.taobao.com/item.htm?id=40066362090*taobao")
-		fmt.Println("------------以上详情页会保存在“图片/taobao”文件夹下--------------")
-		url := util.Input("请输入：", "")
+	for i:=1;i<=16;i++ {
+
+		fmt.Println(i)
+		url := "http://www.monitor.com.cn/report.aspx?id=433&page="+strconv.Itoa(i)
+		fmt.Println(url)
 		downlodpdf(TripAll(url))
-		if cancle() == "y" {
-			break
-		}
 	}
 }
 
@@ -55,6 +57,8 @@ func downlodpdf(url string) {
 		return
 	}
 	content, err := 爬虫.Get()
+
+	//fmt.Println(url,string(content))
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -70,6 +74,7 @@ func downlodpdf(url string) {
 				//if e == false {
 				//	img, e = node.Attr("data-src")
 				//}
+				fmt.Println(pdf,pdfname)
 				if e1 && pdfname != "" && pdf !="" {
 					if !strings.Contains(pdf, ".pdf") {
 						return
@@ -79,7 +84,7 @@ func downlodpdf(url string) {
 						fmt.Println("文件存在：" + dir + "/" + filename)
 					} else {
 						fmt.Println("下载:" + pdf)
-						爬虫.SetUrl(pdf)
+						爬虫.SetUrl("http://www.monitor.com.cn"+pdf)
 						//if strings.HasPrefix(pdf, "//") {
 						//	爬虫.SetUrl("http:" + )
 						//}
