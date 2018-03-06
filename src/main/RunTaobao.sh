@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 today=$(date +%F)
 
@@ -20,3 +20,5 @@ prompt off
 put taobao_data_${today}.tar.gz
 bye
 EOF
+
+rm ./*
