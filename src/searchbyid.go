@@ -24,7 +24,17 @@ import (
 	//"bytes"
 	//"math/big"
 	"encoding/json"
+	"strings"
+	"github.com/hunterhug/marmot/miner"
 )
+
+func init() {
+	爬虫, _ = miner.New(nil)
+	爬虫.SetUa(miner.RandomUa())
+	爬虫.SetHeaderParm("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+	//爬虫.SetHeaderParm("Accept-Encoding", "gzip, deflate, br")
+	爬虫.SetHeaderParm("Accept-Language", "en-US,en;q=0.5")
+}
 
 type Data struct {
 	DataDetail Props `json:"data"`
@@ -70,7 +80,10 @@ func SearchByID(id int) {
 		resultMap:=make(map[string] string)
 		for _,dmap:=range infoLists{
 			for k,v:=range dmap{
-				resultMap[k]=v
+				if strings.Contains(k,"品牌"){
+					resultMap[strconv.Itoa(id)]=v
+				}
+
 			}
 
 		}
