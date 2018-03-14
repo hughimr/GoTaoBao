@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 	"strings"
 	"github.com/hunterhug/marmot/miner"
+	"errors"
 )
 
 func init() {
@@ -47,9 +48,8 @@ type PropsInfo struct {
 }
 
 type InfoJson struct {
-	BasicInfo []map[string] string `json:"基本信息"`
+	BasicInfo []map[string]string `json:"基本信息"`
 }
-
 
 func ParseInfo(data []byte) Data {
 	items := Data{}
@@ -60,10 +60,8 @@ func ParseInfo(data []byte) Data {
 	return items
 }
 
-
-
 //copy from SearchMain()
-func SearchByID(id int) {
+func SearchByID(id int) (s string, e error) {
 	//根据id拼接商品详情url
 
 	url := "https://trade-acs.m.taobao.com/gw/mtop.taobao.detail.getdetail/6.0/?data=%7B%22detail_v%22%3A%223.1.0%22%2C%22exParams%22%3A%22%7B%5C%22action%5C%22%3A%5C%22ipv%5C%22%2C%5C%22countryCode%5C%22%3A%5C%22CN%5C%22%2C%5C%22cpuCore%5C%22%3A%5C%224%5C%22%2C%5C%22cpuMaxHz%5C%22%3A%5C%221209600%5C%22%2C%5C%22from%5C%22%3A%5C%22search%5C%22%2C%5C%22id%5C%22%3A%5C%22" + strconv.Itoa(id) + "%5C%22%2C%5C%22item_id%5C%22%3A%5C%22" + strconv.Itoa(id) + "%5C%22%2C%5C%22latitude%5C%22%3A%5C%2223.12577%5C%22%2C%5C%22list_type%5C%22%3A%5C%22search%5C%22%2C%5C%22longitude%5C%22%3A%5C%22113.372117%5C%22%2C%5C%22osVersion%5C%22%3A%5C%2219%5C%22%2C%5C%22phoneType%5C%22%3A%5C%22Che1-CL10%5C%22%2C%5C%22search_action%5C%22%3A%5C%22initiative%5C%22%2C%5C%22soVersion%5C%22%3A%5C%222.0%5C%22%2C%5C%22utdid%5C%22%3A%5C%22VQF1POae6O4DABLWrwO0STXN%5C%22%7D%22%2C%22itemNumId%22%3A%22" + strconv.Itoa(id) + "%22%7D"
@@ -73,21 +71,26 @@ func SearchByID(id int) {
 	data0, err0 := Search(url)
 	if err0 != nil {
 		fmt.Printf("抓取详情页失败：%s\n", err0.Error())
+		return "",errors.New("get data fail")
 	} else {
 		//fmt.Println(string(data0))
 		x0 := ParseInfo(data0)
-		infoLists:=x0.DataDetail.Prop.GroupProps[0].BasicInfo
-		resultMap:=make(map[string] string)
-		for _,dmap:=range infoLists{
-			for k,v:=range dmap{
-				if strings.Contains(k,"品牌"){
-					resultMap[strconv.Itoa(id)]=v
+		if len(x0.DataDetail.Prop.GroupProps) > 0 {
+			infoLists := x0.DataDetail.Prop.GroupProps[0].BasicInfo
+			resultMap := make(map[string]string)
+			for _, dmap := range infoLists {
+				for k, v := range dmap {
+					if strings.Contains(k, "品牌") && !strings.Contains(k,"产地"){
+						resultMap[strconv.Itoa(id)] = v
+					}
+
 				}
 
 			}
-
+			return strconv.Itoa(id) + ":" + resultMap[strconv.Itoa(id)], nil
+		}else{
+			return "",errors.New("taobao API busy")
 		}
-		fmt.Println(resultMap)
 		//if string(x0) == "" {
 		//	fmt.Println("抓取起始页数据为空")
 		//	os.Exit(1)
@@ -234,4 +237,5 @@ func SearchByID(id int) {
 		//filename.Close()
 		////WriteStringToFile(filekeep,buffer.String())
 	}
+
 }
